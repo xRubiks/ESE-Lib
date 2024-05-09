@@ -8,6 +8,7 @@ import java.util.*;
 
 public enum Database {
 
+
     INSTANCE;
 
     private final List<Book> books = new ArrayList<>();

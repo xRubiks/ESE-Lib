@@ -11,10 +11,10 @@ public class BookCopy {
     private Date lentDate;
     private boolean lent;
 
-    public BookCopy(long id, Book book, Date addedToLibrary) {
+    public BookCopy(long id, Book book) {
         this.id = id;
         this.book = book;
-        this.addedToLibrary = addedToLibrary;
+        this.addedToLibrary = new Date();
         this.lent = false;
     }
 
