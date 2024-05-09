@@ -30,7 +30,7 @@ public enum Database {
         Customer customer1 = new Customer(new Random().nextLong(), new ArrayList<>());
         Customer customer2 = new Customer(new Random().nextLong(), new ArrayList<>());
 
-        Book book1 = new Book(UUID.randomUUID().toString(), "title1", Arrays.asList("Peter", "Konrad"), 1900, "city1", "publisher1", 0);
+        Book book1 = new Book(UUID.randomUUID().toString(), "title1", Arrays.asList("Peter", "Quentin"), 1900, "city1", "publisher1", 0);
         Book book2 = new Book(UUID.randomUUID().toString(), "title2", Arrays.asList("Emily", "Nora"), 1900, "city2", "publisher2", 0);
 
         BookCopy bookCopy1 = new BookCopy(new Random().nextLong(), book1);
@@ -44,18 +44,18 @@ public enum Database {
         System.out.println("---------------------------------------------------------");
         System.out.println();
 
-        customers.forEach(Customer::toString);
+        customers.forEach(c -> System.out.println(c.toString()));
 
         System.out.println();
         System.out.println("---------------------------------------------------------");
         System.out.println();
 
-        books.forEach(Book::toString);
+        books.forEach(b -> System.out.println(b.toString()));
 
         System.out.println();
         System.out.println("---------------------------------------------------------");
         System.out.println();
 
-        bookCopies.forEach(BookCopy::toString);
+        bookCopies.forEach(c -> System.out.println(c.toString()));
     }
 }
