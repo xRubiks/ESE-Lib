@@ -53,7 +53,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return String.format("Title: %s, Author(en): %s, Year: %d, ISBN: %s\n", title, authors, year, isbn);
+        return String.format("Title: %s, Author(en): %s, Year: %d, ISBN: %s | [Book]\n", title, authors, year, isbn);
     }
 
 }

@@ -1,5 +1,7 @@
 package ui;
 
+import services.DataAccessService;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -147,9 +149,17 @@ public class UI {
         selectOptionBooksMenu();
     }
 
-    private void selectOptionBooksMenu(){
+    private void selectOptionBooksMenu() {
         int option = getIntInputMinMax(1,7);
-        demo();
+        switch (option) {
+            case 1 -> demo();
+            case 2 -> { try { new DataAccessService().deleteBook(scanner.nextLine()); } catch (Exception ignored) { } }
+            case 3 -> demo();
+            case 4 -> { try { new DataAccessService().deleteBookCopy(scanner.nextLong()); } catch (Exception ignored) {} }
+            case 5 -> demo();
+            case 6 -> demo();
+            case 7 -> demo();
+        }
     }
 
     /**
@@ -169,7 +179,12 @@ public class UI {
 
     private void selectOptionCustomerMenu(){
         int option = getIntInputMinMax(1,4);
-        demo();
+        switch (option) {
+            case 1 -> demo();
+            case 2 -> { try { new DataAccessService().deleteCustomer(scanner.nextLong()); } catch (Exception ignored) {} }
+            case 3 -> demo();
+            case 4 -> demo();
+        }
     }
 
     /**

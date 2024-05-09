@@ -36,9 +36,9 @@ public enum Database {
         BookCopy bookCopy1 = new BookCopy(new Random().nextLong(), book1);
         BookCopy bookCopy2 = new BookCopy(new Random().nextLong(), book2);
 
-        customers.addAll(Arrays.asList(customer1,customer2));
-        books.addAll(Arrays.asList(book1,book2));
-        bookCopies.addAll(Arrays.asList(bookCopy1,bookCopy2));
+        customers.addAll(Arrays.asList(customer1, customer2));
+        books.addAll(Arrays.asList(book1, book2));
+        bookCopies.addAll(Arrays.asList(bookCopy1, bookCopy2));
 
         System.out.println();
         System.out.println("---------------------------------------------------------");
@@ -57,5 +57,10 @@ public enum Database {
         System.out.println();
 
         bookCopies.forEach(c -> System.out.println(c.toString()));
+
+        System.out.println();
+        System.out.println("---------------------------------------------------------");
+        System.out.println();
+
     }
 }

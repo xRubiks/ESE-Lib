@@ -22,7 +22,7 @@ public class DataAccessService {
             throw new IllegalStateException("customer has unpaid fees or borrowed books");
 
         database.getCustomers().remove(customer);
-
+        System.out.println("customer has been deleted");
 
     }
 
@@ -37,10 +37,11 @@ public class DataAccessService {
                 .anyMatch(BookCopy::isLent);
 
         if (anyCopyLent)
-            throw new IllegalStateException("At least one copy of this book is currently lent");
+            throw new IllegalStateException("at least one copy of this book is currently lent");
 
         database.getBookCopies().removeIf(c -> c.getBook().equals(bookToDelete));
         database.getBooks().remove(bookToDelete);
+        System.out.println("book and corresponding copies have been deleted");
     }
 
     public void deleteBookCopy(long id) throws BookCopyNotFoundException {
@@ -53,5 +54,6 @@ public class DataAccessService {
             throw new IllegalStateException("bookcopy is currently lent");
 
         database.getBookCopies().remove(copy);
+        System.out.println("copy has been deleted");
     }
 }

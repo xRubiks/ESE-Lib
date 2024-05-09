@@ -6,12 +6,21 @@
 
     <groupId>org.example</groupId>
     <artifactId>project07</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>Lib1-V6</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
 
 </project>
