@@ -8,9 +8,6 @@ import exceptions.BookCopyNotFoundException;
 import exceptions.BookNotFoundException;
 import exceptions.CustomerNotFoundException;
 
-import java.util.List;
-import java.util.Optional;
-
 public class DataAccessService {
 
     Database database = Database.INSTANCE;
