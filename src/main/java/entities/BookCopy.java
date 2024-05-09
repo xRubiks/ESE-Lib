@@ -53,4 +53,9 @@ public class BookCopy {
     public void setLentDate(Date lentDate) {
         this.lentDate = lentDate;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Title: %s, Author(en): %s, ISBN: %s, ID: %d, Shelf location: %s, Lent status: %b, Lent Date: %s\n", book.getTitle(), book.getAuthors(), book.getIsbn(), id, shelfLocation, lent, lentDate);
+    }
 }

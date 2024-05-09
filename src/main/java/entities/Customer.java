@@ -93,4 +93,9 @@ public class Customer {
     public List<BookCopy> getBookCopies() {
         return bookCopies;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d, Last name: %s, First name: %s, FeesPayed-Status: %b, Number of books lent: %d \n", id, lastName, firstName, isFeesPayed(), getBookCopies().size());
+    }
 }

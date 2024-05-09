@@ -8,7 +8,6 @@ import java.util.*;
 
 public enum Database {
 
-
     INSTANCE;
 
     private final List<Book> books = new ArrayList<>();
@@ -40,5 +39,23 @@ public enum Database {
         customers.addAll(Arrays.asList(customer1,customer2));
         books.addAll(Arrays.asList(book1,book2));
         bookCopies.addAll(Arrays.asList(bookCopy1,bookCopy2));
+
+        System.out.println();
+        System.out.println("---------------------------------------------------------");
+        System.out.println();
+
+        customers.forEach(Customer::toString);
+
+        System.out.println();
+        System.out.println("---------------------------------------------------------");
+        System.out.println();
+
+        books.forEach(Book::toString);
+
+        System.out.println();
+        System.out.println("---------------------------------------------------------");
+        System.out.println();
+
+        bookCopies.forEach(BookCopy::toString);
     }
 }

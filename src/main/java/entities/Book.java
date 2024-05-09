@@ -51,5 +51,9 @@ public class Book {
         return edition;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Title: %s, Author(en): %s, Year: %d, ISBN: %s\n", title, authors, year, isbn);
+    }
 
 }
