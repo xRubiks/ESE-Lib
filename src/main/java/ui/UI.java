@@ -153,9 +153,13 @@ public class UI {
         int option = getIntInputMinMax(1,7);
         switch (option) {
             case 1 -> demo();
-            case 2 -> { try { new DataAccessService().deleteBook(scanner.nextLine()); } catch (Exception ignored) { } }
+            case 2 -> {
+                System.out.print("enter ISBN: ");
+                try { new DataAccessService().deleteBook(scanner.nextLine()); } catch (Exception ignored) { } }
             case 3 -> demo();
-            case 4 -> { try { new DataAccessService().deleteBookCopy(scanner.nextLong()); } catch (Exception ignored) {} }
+            case 4 -> {
+                System.out.print("enter ID: ");
+                try { new DataAccessService().deleteBookCopy(scanner.nextLong()); } catch (Exception ignored) {} }
             case 5 -> demo();
             case 6 -> demo();
             case 7 -> demo();
@@ -181,7 +185,9 @@ public class UI {
         int option = getIntInputMinMax(1,4);
         switch (option) {
             case 1 -> demo();
-            case 2 -> { try { new DataAccessService().deleteCustomer(scanner.nextLong()); } catch (Exception ignored) {} }
+            case 2 -> {
+                System.out.print("enter ID: ");
+                try { new DataAccessService().deleteCustomer(scanner.nextLong()); } catch (Exception ignored) {} }
             case 3 -> demo();
             case 4 -> demo();
         }

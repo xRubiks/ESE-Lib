@@ -79,7 +79,7 @@ public class DataAccessServiceTest {
     }
 
     @Test
-    public void deleteBookCopyIdCouldntFind(){
+    public void deleteBookCopyIdCouldNotFind(){
         assertThrows(BookCopyNotFoundException.class, () -> dataAccessService.deleteBookCopy(Long.MIN_VALUE));
     }
 

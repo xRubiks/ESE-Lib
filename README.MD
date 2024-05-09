@@ -21,7 +21,7 @@ To use the program, follow these steps:
 
 ## Main Menu Options
 
-1. **Lend book copy******: Borrow a book copy from the library.
+1. **Lend book copy**: Borrow a book copy from the library.
 2. **Return book copy**: Return a borrowed book copy to the library.
 3. **Search book copy**: Search for a book copy in the library by title, author, or ISBN.
 4. **Manage books**: Perform different actions related to managing books, such as importing/exporting data from customers and deleting books.
