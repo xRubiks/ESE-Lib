@@ -1,4 +1,4 @@
-import UI.UI;
+import ui.UI;
 
 public class Main {
 
