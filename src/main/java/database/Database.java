@@ -7,7 +7,9 @@ import entities.Customer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Database {
+public enum Database {
+
+    INSTANCE;
 
     private final List<Book> books = new ArrayList<>();
     private final List<BookCopy> bookCopies = new ArrayList<>();
