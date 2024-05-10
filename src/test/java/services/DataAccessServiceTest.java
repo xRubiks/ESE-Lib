@@ -46,10 +46,7 @@ public class DataAccessServiceTest {
 
     @Test
     public void deleteCustomerWorksRight() {
-        try {
-            dataAccessService.deleteCustomer(1);
-        } catch (Exception ignored) {}
-
+        try { dataAccessService.deleteCustomer(1); } catch (Exception ignored) {}
         assertTrue(Database.INSTANCE.getCustomers().stream().noneMatch(c -> c.getId() == 1));
     }
 
@@ -75,9 +72,7 @@ public class DataAccessServiceTest {
 
     @Test
     public void deleteBookCopyWorksRight(){
-        try {
-            dataAccessService.deleteBookCopy(1);
-        } catch (Exception ignored) {}
+        try { dataAccessService.deleteBookCopy(1); } catch (Exception ignored) {}
         assertTrue(Database.INSTANCE.getBookCopies().stream().noneMatch(bc -> bc.getId() == 1));
     }
 
