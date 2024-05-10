@@ -7,112 +7,77 @@ import entities.Customer;
 import exceptions.BookCopyNotFoundException;
 import exceptions.BookNotFoundException;
 import exceptions.CustomerNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+/**
+ * This class provides methods to interact with the data access layer,
+ * allowing manipulation of customer, book, and book copy data.
+ */
+public class DataAccessService {
 
-import static org.junit.jupiter.api.Assertions.*;
+    Database database = Database.INSTANCE;
 
-public class DataAccessServiceTest {
+    /**
+     * Deletes a customer from the database.
+     *
+     * @param id The ID of the customer to be deleted.
+     * @throws CustomerNotFoundException If no customer with the given ID is found.
+     * @throws IllegalStateException    If the customer has unpaid fees or borrowed books.
+     */
+    public void deleteCustomer(long id) throws CustomerNotFoundException {
+        Customer customer = database.getCustomers().stream()
+                .filter(c -> c.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new CustomerNotFoundException(String.format("Customer with ID %d cannot be found", id)));
 
-    private final DataAccessService dataAccessService = new DataAccessService();
-    private BookCopy copy1;
-    
-    @BeforeEach
-    public void setup() {
-        Database.INSTANCE.getCustomers().clear();
-        Database.INSTANCE.getBooks().clear();
-        Database.INSTANCE.getBookCopies().clear();
+        if (!customer.isFeesPayed() || !customer.getBookCopies().isEmpty())
+            throw new IllegalStateException("Customer has unpaid fees or borrowed books");
 
-        Customer customer1 = new Customer(1, new ArrayList<>());
-        Customer customer2 = new Customer(2, new ArrayList<>());
-
-        Book book1 = new Book("1", "title1", Arrays.asList("Peter", "Quentin"), 1900, "city1", "publisher1", 0);
-        Book book2 = new Book("2", "title2", Arrays.asList("Emily", "Nora"), 1900, "city2", "publisher2", 0);
-
-        BookCopy bookCopy1 = new BookCopy(1, book1);
-        BookCopy bookCopy2 = new BookCopy(2, book2);
-        BookCopy bookCopy3 = new BookCopy(3, book1);
-
-        copy1 = bookCopy1;
-        
-        Database.INSTANCE.getCustomers().addAll(Arrays.asList(customer1, customer2));
-        Database.INSTANCE.getBooks().addAll(Arrays.asList(book1, book2));
-        Database.INSTANCE.getBookCopies().addAll(Arrays.asList(bookCopy1, bookCopy2, bookCopy3));;
+        database.getCustomers().remove(customer);
+        System.out.println("Customer has been deleted");
     }
 
-    @Test
-    public void deleteCustomerWorksRight() {
-        try {
-            dataAccessService.deleteCustomer(1);
-        } catch (Exception ignored) {}
+    /**
+     * Deletes a book from the database along with its copies.
+     *
+     * @param isbn The ISBN of the book to be deleted.
+     * @throws BookNotFoundException    If no book with the given ISBN is found.
+     * @throws IllegalStateException   If at least one copy of the book is currently lent.
+     */
+    public void deleteBook(String isbn) throws BookNotFoundException {
+        Book bookToDelete = database.getBooks().stream()
+                .filter(b -> b.getIsbn().equals(isbn))
+                .findFirst()
+                .orElseThrow(() -> new BookNotFoundException(String.format("Book with ISBN %s not found", isbn)));
 
-        assertTrue(Database.INSTANCE.getCustomers().stream().noneMatch(c -> c.getId() == 1));
+        boolean anyCopyLent = database.getBookCopies().stream()
+                .filter(c -> c.getBook().equals(bookToDelete))
+                .anyMatch(BookCopy::isLent);
+
+        if (anyCopyLent)
+            throw new IllegalStateException("At least one copy of this book is currently lent");
+
+        database.getBookCopies().removeIf(c -> c.getBook().equals(bookToDelete));
+        database.getBooks().remove(bookToDelete);
+        System.out.println("Book and corresponding copies have been deleted");
     }
 
-    @Test
-    public void deleteCustomerIdCouldntFind() {
-        assertThrows(CustomerNotFoundException.class, () -> dataAccessService.deleteCustomer(10));
-        assertEquals(2, Database.INSTANCE.getCustomers().size());
-    }
+    /**
+     * Deletes a book copy from the database.
+     *
+     * @param id The ID of the book copy to be deleted.
+     * @throws BookCopyNotFoundException If no book copy with the given ID is found.
+     * @throws IllegalStateException    If the book copy is currently lent.
+     */
+    public void deleteBookCopy(long id) throws BookCopyNotFoundException {
+        BookCopy copy = database.getBookCopies().stream()
+                .filter(c -> c.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new BookCopyNotFoundException(String.format("Book copy with ID %d cannot be found", id)));
 
-    @Test
-    public void deleteCustomerFeesUnpaid() {
-        Database.INSTANCE.getCustomers().get(0).setFeesPayed(false);
-        assertThrows(IllegalStateException.class, () -> dataAccessService.deleteCustomer(1));
-        assertTrue(Database.INSTANCE.getCustomers().stream().anyMatch(c -> c.getId() == 1));
-    }
-    
-    @Test
-    public void deleteCustomerCopiesLent() {
-        Database.INSTANCE.getCustomers().get(0).getBookCopies().add(copy1);
-        assertThrows(IllegalStateException.class, () -> dataAccessService.deleteCustomer(1));
-        assertTrue(Database.INSTANCE.getCustomers().stream().anyMatch(c -> c.getId() == 1));
-    }
+        if (copy.isLent())
+            throw new IllegalStateException("Book copy is currently lent");
 
-    @Test
-    public void deleteBookCopyWorksRight(){
-        try {
-            dataAccessService.deleteBookCopy(1);
-        } catch (Exception ignored) {}
-        assertTrue(Database.INSTANCE.getBookCopies().stream().noneMatch(bc -> bc.getId() == 1));
+        database.getBookCopies().remove(copy);
+        System.out.println("Copy has been deleted");
     }
-
-    @Test
-    public void deleteBookCopyIdCouldNotFind(){
-        assertThrows(BookCopyNotFoundException.class, () -> dataAccessService.deleteBookCopy(Long.MIN_VALUE));
-        assertEquals(3, Database.INSTANCE.getBookCopies().size());
-    }
-
-    @Test
-    public void deleteBookCopyIsLent(){
-        copy1.setLent(true);
-        assertThrows(IllegalStateException.class, () -> dataAccessService.deleteBookCopy(1));
-        assertTrue(Database.INSTANCE.getBookCopies().stream().anyMatch(c -> c.getId() == 1));
-    }
-
-    @Test
-    public void deleteBookWorksRight(){
-        try {
-            dataAccessService.deleteBook("1");
-        } catch (Exception ignored) {}
-        assertTrue(Database.INSTANCE.getBooks().stream().noneMatch(b -> b.getIsbn().equals("1")));
-        assertTrue(Database.INSTANCE.getBookCopies().stream().noneMatch(c -> c.getBook().getIsbn().equals("1")));
-    }
-
-    @Test
-    public void deleteBookIsbnNotFound(){
-        assertThrows(BookNotFoundException.class, () -> dataAccessService.deleteBook(String.valueOf(6)));
-        assertEquals(2, Database.INSTANCE.getBooks().size());
-    }
-
-    @Test
-    public void deleteBookIsLent(){
-        copy1.setLent(true);
-        assertThrows(IllegalStateException.class, () -> dataAccessService.deleteBook("1"));
-        assertTrue(Database.INSTANCE.getBooks().stream().anyMatch(b -> b.getIsbn().equals("1")));
-    }
-
 }

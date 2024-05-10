@@ -26,6 +26,7 @@ public enum Database {
         return customers;
     }
 
+
     public void init() {
         Customer customer1 = new Customer(new Random().nextLong(), new ArrayList<>());
         Customer customer2 = new Customer(new Random().nextLong(), new ArrayList<>());

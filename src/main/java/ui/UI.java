@@ -13,7 +13,7 @@ public class UI {
     private boolean running = true;
 
 
-    public UI(){
+    public UI() {
         scanner = new Scanner(System.in);
         start();
     }
@@ -21,8 +21,8 @@ public class UI {
     /**
      * The function keeping the project running as long as the user does not want to exit
      */
-    private void start(){
-        while(running){
+    private void start() {
+        while (running) {
             mainMenu();
         }
     }
@@ -31,7 +31,7 @@ public class UI {
     /**
      * Method which displays the main menu on the console
      */
-    private void mainMenu(){
+    private void mainMenu() {
         System.out.println("Main Menu: \n");
         System.out.println("[1] Lend book copy");
         System.out.println("[2] Return book copy");
@@ -51,14 +51,14 @@ public class UI {
      * Gets a user input int between 1 and 6 and redirects to the corresponding
      * submenu
      */
-    private void selectOptionInMainMenu(){
-        int option = getIntInputMinMax(1,6);
-        switch (option){
+    private void selectOptionInMainMenu() {
+        int option = getIntInputMinMax(1, 6);
+        switch (option) {
             case 1 -> lendBook();
             case 2 -> returnBook();
             case 3 -> searchBook();
-            case 4 -> manageBooks(); //TODO write submenu
-            case 5 -> manageCustomers(); //TODO write submenu
+            case 4 -> manageBooks();
+            case 5 -> manageCustomers();
             case 6 -> exit();
         }
     }
@@ -66,23 +66,24 @@ public class UI {
 
     /**
      * Getter for int input with a minimum and maximum
+     *
      * @param min the minimum number allowed
      * @param max the maximum number allowed
      * @return the inputted number if it is valid
      */
-    private int getIntInputMinMax(int min, int max){
+    private int getIntInputMinMax(int min, int max) {
         boolean inputValid = false;
         int input = 0;
-        while(!inputValid){
+        while (!inputValid) {
             try {
                 input = scanner.nextInt();
                 inputValid = true;
-            }catch (InputMismatchException exc){
+            } catch (InputMismatchException exc) {
                 System.out.format("The input must be a number between %d and %d\n", min, max);
-            } finally{
+            } finally {
                 scanner.nextLine();
             }
-            if(input < min || input > max){
+            if (input < min || input > max) {
                 System.out.format("Please enter a number between %d and %d\n", min, max);
                 inputValid = false;
             }
@@ -93,7 +94,7 @@ public class UI {
     /**
      * Method to display the submenu for searching books in the console
      */
-    private void searchBook(){
+    private void searchBook() {
         System.out.println("How would you like to search for the book? \n");
         System.out.println("[1] Book Title");
         System.out.println("[2] Book Author");
@@ -102,15 +103,16 @@ public class UI {
         System.out.print("Enter a number between 1 and 3: "); //TODO: bessere Formulierung finden
 
         selectOptionSearchMenu();
+
+        clearCommandLine();
     }
 
     /**
-     * Gets a user input int between 1 and 6 and redirects to the corresponding
-     * option
+     * Gets a user input int between 1 and 6 and redirects to the corresponding option
      */
     private void selectOptionSearchMenu() {
-        int option = getIntInputMinMax(1,3);
-        switch (option){
+        int option = getIntInputMinMax(1, 3);
+        switch (option) {
             case 1 -> searchBookByTitle();
             case 2 -> searchBookByAuthor();
             case 3 -> searchBookByISBN();
@@ -120,14 +122,14 @@ public class UI {
     /**
      * Demo method for lending books
      */
-    private void lendBook(){
+    private void lendBook() {
         demo();
     }
 
     /**
      * Demo method for returning books
      */
-    private void returnBook(){
+    private void returnBook() {
         demo();
     }
 
@@ -147,19 +149,36 @@ public class UI {
         System.out.format("To choose, enter a number between 1 and 7: "); //TODO: bessere Formulierungen finden
 
         selectOptionBooksMenu();
+
+        System.out.println("Press Enter to continue...");
+        scanner.nextLine();
+
+        clearCommandLine();
+
+    }
+
+    private void clearCommandLine() {
+        for (int i = 0; i <= 50; i++)
+            System.out.println();
     }
 
     private void selectOptionBooksMenu() {
-        int option = getIntInputMinMax(1,7);
+        int option = getIntInputMinMax(1, 7);
         switch (option) {
             case 1 -> demo();
             case 2 -> {
                 System.out.print("enter ISBN: ");
-                try { new DataAccessService().deleteBook(scanner.nextLine()); } catch (Exception ignored) { } }
+                try { new DataAccessService().deleteBook(scanner.nextLine());} catch (Exception ignored) {} finally {
+                    scanner.nextLine();
+                }
+            }
             case 3 -> demo();
             case 4 -> {
                 System.out.print("enter ID: ");
-                try { new DataAccessService().deleteBookCopy(scanner.nextLong()); } catch (Exception ignored) {} }
+                try { new DataAccessService().deleteBookCopy(scanner.nextLong());} catch (Exception ignored) {} finally {
+                    scanner.nextLine();
+                }
+            }
             case 5 -> demo();
             case 6 -> demo();
             case 7 -> demo();
@@ -179,15 +198,23 @@ public class UI {
         System.out.println("To choose an option, enter a number between 1 and 4");
 
         selectOptionCustomerMenu();
+
+       System.out.println("Press Enter to continue...");
+       scanner.nextLine();
+
+       clearCommandLine();
     }
 
-    private void selectOptionCustomerMenu(){
-        int option = getIntInputMinMax(1,4);
+    private void selectOptionCustomerMenu() {
+        int option = getIntInputMinMax(1, 4);
         switch (option) {
             case 1 -> demo();
             case 2 -> {
                 System.out.print("enter ID: ");
-                try { new DataAccessService().deleteCustomer(scanner.nextLong()); } catch (Exception ignored) {} }
+                try { new DataAccessService().deleteCustomer(scanner.nextLong());} catch (Exception ignored) {} finally {
+                    scanner.nextLine();
+                }
+            }
             case 3 -> demo();
             case 4 -> demo();
         }
@@ -196,21 +223,21 @@ public class UI {
     /**
      * demo method for searching a book by it`s title
      */
-    private void searchBookByTitle(){
+    private void searchBookByTitle() {
         demo();
     }
 
     /**
      * Demo method for searching a book by it`s author
      */
-    private void searchBookByAuthor(){
+    private void searchBookByAuthor() {
         demo();
     }
 
     /**
      * Demo method for searching a book by it`s ISBN
      */
-    private void searchBookByISBN(){
+    private void searchBookByISBN() {
         demo();
     }
 
@@ -226,7 +253,7 @@ public class UI {
     /**
      * Method displaying a demo message and redirecting back to the main menu
      */
-    private void demo(){
+    private void demo() {
         System.out.println("\nThis function has not yet been implemented,\nyou will be returned to " +
                 "the main menu\n");
         System.out.println("Press enter to continue...");
