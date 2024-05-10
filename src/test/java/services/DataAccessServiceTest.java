@@ -7,6 +7,7 @@ import entities.Customer;
 import exceptions.BookCopyNotFoundException;
 import exceptions.BookNotFoundException;
 import exceptions.CustomerNotFoundException;
+import exceptions.InvalidStateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,14 +62,14 @@ public class DataAccessServiceTest {
     @Test
     public void deleteCustomerFeesUnpaid() {
         Database.INSTANCE.getCustomers().get(0).setFeesPayed(false);
-        assertThrows(IllegalStateException.class, () -> dataAccessService.deleteCustomer(1));
+        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteCustomer(1));
         assertTrue(Database.INSTANCE.getCustomers().stream().anyMatch(c -> c.getId() == 1));
     }
 
     @Test
     public void deleteCustomerCopiesLent() {
         Database.INSTANCE.getCustomers().get(0).getBookCopies().add(copy1);
-        assertThrows(IllegalStateException.class, () -> dataAccessService.deleteCustomer(1));
+        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteCustomer(1));
         assertTrue(Database.INSTANCE.getCustomers().stream().anyMatch(c -> c.getId() == 1));
     }
 
@@ -89,7 +90,7 @@ public class DataAccessServiceTest {
     @Test
     public void deleteBookCopyIsLent(){
         copy1.setLent(true);
-        assertThrows(IllegalStateException.class, () -> dataAccessService.deleteBookCopy(1));
+        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteBookCopy(1));
         assertTrue(Database.INSTANCE.getBookCopies().stream().anyMatch(c -> c.getId() == 1));
     }
 
@@ -111,7 +112,7 @@ public class DataAccessServiceTest {
     @Test
     public void deleteBookIsLent(){
         copy1.setLent(true);
-        assertThrows(IllegalStateException.class, () -> dataAccessService.deleteBook("1"));
+        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteBook("1"));
         assertTrue(Database.INSTANCE.getBooks().stream().anyMatch(b -> b.getIsbn().equals("1")));
     }
 
