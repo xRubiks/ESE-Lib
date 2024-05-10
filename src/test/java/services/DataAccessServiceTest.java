@@ -13,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DataAccessServiceTest {
 
@@ -35,12 +34,13 @@ public class DataAccessServiceTest {
 
         BookCopy bookCopy1 = new BookCopy(1, book1);
         BookCopy bookCopy2 = new BookCopy(2, book2);
+        BookCopy bookCopy3 = new BookCopy(3, book1);
 
         copy1 = bookCopy1;
         
         Database.INSTANCE.getCustomers().addAll(Arrays.asList(customer1, customer2));
         Database.INSTANCE.getBooks().addAll(Arrays.asList(book1, book2));
-        Database.INSTANCE.getBookCopies().addAll(Arrays.asList(bookCopy1, bookCopy2));;
+        Database.INSTANCE.getBookCopies().addAll(Arrays.asList(bookCopy1, bookCopy2, bookCopy3));;
     }
 
     @Test
@@ -54,20 +54,22 @@ public class DataAccessServiceTest {
 
     @Test
     public void deleteCustomerIdCouldntFind() {
-        assertThrows(CustomerNotFoundException.class, () -> dataAccessService.deleteCustomer(10)) ;
-
+        assertThrows(CustomerNotFoundException.class, () -> dataAccessService.deleteCustomer(10));
+        assertEquals(2, Database.INSTANCE.getCustomers().size());
     }
 
     @Test
     public void deleteCustomerFeesUnpaid() {
         Database.INSTANCE.getCustomers().get(0).setFeesPayed(false);
         assertThrows(IllegalStateException.class, () -> dataAccessService.deleteCustomer(1));
+        assertTrue(Database.INSTANCE.getCustomers().stream().anyMatch(c -> c.getId() == 1));
     }
     
     @Test
     public void deleteCustomerCopiesLent() {
         Database.INSTANCE.getCustomers().get(0).getBookCopies().add(copy1);
         assertThrows(IllegalStateException.class, () -> dataAccessService.deleteCustomer(1));
+        assertTrue(Database.INSTANCE.getCustomers().stream().anyMatch(c -> c.getId() == 1));
     }
 
     @Test
@@ -81,12 +83,14 @@ public class DataAccessServiceTest {
     @Test
     public void deleteBookCopyIdCouldNotFind(){
         assertThrows(BookCopyNotFoundException.class, () -> dataAccessService.deleteBookCopy(Long.MIN_VALUE));
+        assertEquals(3, Database.INSTANCE.getBookCopies().size());
     }
 
     @Test
     public void deleteBookCopyIsLent(){
         copy1.setLent(true);
         assertThrows(IllegalStateException.class, () -> dataAccessService.deleteBookCopy(1));
+        assertTrue(Database.INSTANCE.getBookCopies().stream().anyMatch(c -> c.getId() == 1));
     }
 
     @Test
@@ -95,17 +99,20 @@ public class DataAccessServiceTest {
             dataAccessService.deleteBook("1");
         } catch (Exception ignored) {}
         assertTrue(Database.INSTANCE.getBooks().stream().noneMatch(b -> b.getIsbn().equals("1")));
+        assertTrue(Database.INSTANCE.getBookCopies().stream().noneMatch(c -> c.getBook().getIsbn().equals("1")));
     }
 
     @Test
     public void deleteBookIsbnNotFound(){
         assertThrows(BookNotFoundException.class, () -> dataAccessService.deleteBook(String.valueOf(6)));
+        assertEquals(2, Database.INSTANCE.getBooks().size());
     }
 
     @Test
     public void deleteBookIsLent(){
         copy1.setLent(true);
         assertThrows(IllegalStateException.class, () -> dataAccessService.deleteBook("1"));
+        assertTrue(Database.INSTANCE.getBooks().stream().anyMatch(b -> b.getIsbn().equals("1")));
     }
 
 }
