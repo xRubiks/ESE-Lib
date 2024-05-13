@@ -41,7 +41,7 @@ public class DataAccessServiceTest {
 
         Database.INSTANCE.getCustomers().addAll(Arrays.asList(customer1, customer2));
         Database.INSTANCE.getBooks().addAll(Arrays.asList(book1, book2));
-        Database.INSTANCE.getBookCopies().addAll(Arrays.asList(bookCopy1, bookCopy2, bookCopy3));;
+        Database.INSTANCE.getBookCopies().addAll(Arrays.asList(bookCopy1, bookCopy2, bookCopy3));
     }
 
     @Test
