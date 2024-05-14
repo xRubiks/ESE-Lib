@@ -20,9 +20,7 @@ To compile and run the Java application using IntelliJ IDEA, please follow these
 
 3. To compile the Java application, use the `mvn clean compile assembly:single` command.
 
-4. Navigate to the target directory using the `cd .\target` command.
-
-5. To run the Java application, use the `java -jar .\target\project07-Lib1-V2-jar-with-dependencies.jar` command.
+4. To run the Java application, use the `java -jar .\target\project07-Lib1-V2-jar-with-dependencies.jar` command.
 
 ## Usage
 
