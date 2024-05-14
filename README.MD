@@ -18,11 +18,11 @@ To compile and run the Java application using IntelliJ IDEA, please follow these
 
 2. Navigate to the project directory using the `cd` command.
 
-3. To compile the Java application, use the "mvn clean compile assembly:single" command.
+3. To compile the Java application, use the `mvn clean compile assembly:single` command.
 
 4. Navigate to the target directory using the `cd .\target` command.
 
-5. To run the Java application, use the "java -jar project07-Lib1-V2-jar-with-dependencies.jar" command.
+5. To run the Java application, use the `java -jar .\target\project07-Lib1-V2-jar-with-dependencies.jar` command.
 
 ## Usage
 
@@ -52,3 +52,10 @@ To run tests for the Java application using IntelliJ IDEA, please follow these s
 2. Navigate to the project directory using the `cd` command.
 
 3. To run all tests, use the "mvn test" command.
+
+## Runnning Test Coverage
+
+1. Open Terminal
+2. Navigate to the project directory using the `cd` command.
+3. To generate a test coverage report, use the `mvn clean verify` command.
+4. Open the `index.html` file using `.\target\site\jacoco\index.html` to view the test coverage report.
