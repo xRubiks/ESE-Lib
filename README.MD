@@ -49,7 +49,7 @@ To run tests for the Java application using IntelliJ IDEA, please follow these s
 
 2. Navigate to the project directory using the `cd` command.
 
-3. To run all tests, use the "mvn test" command.
+3. To run all tests, use the `mvn test` command.
 
 ## Runnning Test Coverage
 
