@@ -11,11 +11,19 @@ public class BookCopy {
     private Date lentDate;
     private boolean lent;
 
-    public BookCopy(long id, Book book) {
+    public BookCopy(long id, Book book, Date addedToLibrary, boolean lent) {
         this.id = id;
         this.book = book;
-        this.addedToLibrary = new Date();
-        this.lent = false;
+        this.addedToLibrary = addedToLibrary;
+        this.lent = lent;
+    }
+
+    public BookCopy(long id, Book book, Date addedToLibrary, boolean lent, Date lentDate) {
+        this.id = id;
+        this.book = book;
+        this.addedToLibrary = addedToLibrary;
+        this.lent = lent;
+        this.lentDate = lentDate;
     }
 
     public long getId() {
@@ -56,6 +64,7 @@ public class BookCopy {
 
     @Override
     public String toString() {
-        return String.format("Title: %s, Author(en): %s, ISBN: %s, ID: %d, Shelf location: %s, Lent status: %b, Lent Date: %s | [BookCopy]\n", book.getTitle(), book.getAuthors(), book.getIsbn(), id, shelfLocation, lent, lentDate);
+        return String.format("Title: %s, Author(en): %s, ISBN: %s, ID: %d, Shelf location: %s, Lent status: %b, Lent Date: %s | [BookCopy]\n",
+                book.getTitle(), book.getAuthors(), book.getIsbn(), id, shelfLocation, lent, lentDate);
     }
 }

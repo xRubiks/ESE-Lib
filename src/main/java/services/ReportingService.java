@@ -14,7 +14,7 @@ public class ReportingService {
     /**
      * Prints information about all books in the library system.
      */
-    public void issueAllBooks() {
+    public void printAllBooks() {
         Database.INSTANCE.getBooks()
                 .forEach(System.out::println);
     }
@@ -22,7 +22,7 @@ public class ReportingService {
     /**
      * Prints information about all customers registered in the library system.
      */
-    public void issueCustomers() {
+    public void printAllCustomers() {
         Database.INSTANCE.getCustomers()
                 .forEach(System.out::println);
     }
@@ -30,7 +30,7 @@ public class ReportingService {
     /**
      * Prints information about all book copies that are currently not lent out.
      */
-    public void issueNotLentCopies() {
+    public void printAllNonLentCopies() {
         Database.INSTANCE.getBookCopies()
                 .stream()
                 .filter(book -> !book.isLent())
@@ -40,7 +40,7 @@ public class ReportingService {
     /**
      * Prints information about all book copies that are currently lent out.
      */
-    public void issueLentCopies() {
+    public void printAllLentCopies() {
         Database.INSTANCE.getBookCopies()
                 .stream()
                 .filter(BookCopy::isLent)
@@ -53,7 +53,7 @@ public class ReportingService {
      * @param customerId The unique identifier of the customer.
      * @throws RuntimeException / {@link CustomerNotFoundException} If a customer with the provided ID cannot be found in the database.
      */
-    public void issueCustomersCopies(long customerId) {
+    public void printAllCustomersCopies(long customerId) {
         Database.INSTANCE.getCustomers()
                 .stream()
                 .filter(c -> c.getId() == customerId)

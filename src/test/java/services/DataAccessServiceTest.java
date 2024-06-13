@@ -39,12 +39,12 @@ class DataAccessServiceTest {
         Book book1 = new Book("1", "title1", Arrays.asList("Molitz", "Quentin"), 1900, "city1", "publisher1", 0);
         Book book2 = new Book("2", "title2", Arrays.asList("Emily", "Nora"), 1900, "city2", "publisher2", 0);
 
-        BookCopy bookCopy1 = new BookCopy(1, book1);
-        BookCopy bookCopy2 = new BookCopy(2, book2);
-        BookCopy bookCopy3 = new BookCopy(3, book1);
-        BookCopy bookCopy4 = new BookCopy(4, book1);
-        BookCopy bookCopy5 = new BookCopy(5, book2);
-        BookCopy bookCopy6 = new BookCopy(6, book1);
+        BookCopy bookCopy1 = new BookCopy(1, book1, new Date(), false);
+        BookCopy bookCopy2 = new BookCopy(2, book2, new Date(), false);
+        BookCopy bookCopy3 = new BookCopy(3, book1, new Date(), false);
+        BookCopy bookCopy4 = new BookCopy(4, book1, new Date(), false);
+        BookCopy bookCopy5 = new BookCopy(5, book2, new Date(), false);
+        BookCopy bookCopy6 = new BookCopy(6, book1, new Date(), false);
         copy1 = bookCopy1;
 
         Database.INSTANCE.getCustomers().addAll(Arrays.asList(customer1, customer2));

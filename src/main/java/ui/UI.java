@@ -5,7 +5,6 @@ import services.RemovalService;
 import services.DataAccessService;
 import services.ReportingService;
 
-import java.net.SocketImpl;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -225,9 +224,9 @@ public class UI {
                     scanner.nextLine();
                 }
             }
-            case 5 -> new ReportingService().issueAllBooks();
-            case 6 -> new ReportingService().issueNotLentCopies();
-            case 7 -> new ReportingService().issueLentCopies();
+            case 5 -> new ReportingService().printAllBooks();
+            case 6 -> new ReportingService().printAllNonLentCopies();
+            case 7 -> new ReportingService().printAllLentCopies();
         }
     }
 
@@ -272,10 +271,10 @@ public class UI {
                     scanner.nextLine();
                 }
             }
-            case 3 -> new ReportingService().issueCustomers();
+            case 3 -> new ReportingService().printAllCustomers();
             case 4 -> {
                 System.out.println("enter customer ID: ");
-                new ReportingService().issueCustomersCopies(scanner.nextLong());
+                new ReportingService().printAllCustomersCopies(scanner.nextLong());
             }
         }
     }

@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.Date;
 import java.util.List;
 
 public class Customer {
@@ -82,7 +83,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return String.format("ID: %d, Last name: %s, First name: %s, FeesPayed-Status: %b, Number of books lent: %d | [Customer] \n", id, lastName, firstName, isFeesPayed(), getBookCopies().size());
+        return String.format("ID: %d, Last name: %s, First name: %s, FeesPayed-Status: %b, Number of books lent: %d | [Customer]\n", id, lastName, firstName, isFeesPayed(), getBookCopies().size());
     }
 
 

@@ -10,6 +10,8 @@ import exceptions.InvalidStateException;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -28,14 +30,23 @@ public class CSVService {
      * @throws CsvException          If there is an error parsing the CSV file.
      * @throws InvalidStateException If a book with the provided ISBN cannot be found in the database.
      */
-    public void importBookCopiesViaCSV(String filePath) throws IOException, CsvException, InvalidStateException {
+    public void importBookCopiesViaCSV(String filePath) throws IOException, CsvException, InvalidStateException, ParseException {
         List<List<String>> bookCopies = readCSVFile(filePath);
         for (List<String> bookCopy : bookCopies) {
             Book book = Database.INSTANCE.getBooks().stream()
-                    .filter(b -> b.getIsbn().equals(bookCopy.get(0)))
+                    .filter(b -> b.getIsbn().equals(bookCopy.get(1)))
                     .findFirst()
-                    .orElseThrow(() -> new InvalidStateException("No book copy with given ISBN found"));
-            Database.INSTANCE.getBookCopies().add(new BookCopy(new Random().nextLong(), book));
+                    .orElseThrow(() -> new InvalidStateException("No book with given ISBN found"));
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date importDate = format.parse(bookCopy.get(3));
+
+            if (bookCopy.get(4).equals("yes")) {
+                Date lentDate = format.parse(bookCopy.get(5));
+                Database.INSTANCE.getBookCopies().add(new BookCopy(Long.parseLong(bookCopy.get(0)), book, importDate, true, lentDate));
+            } else
+                Database.INSTANCE.getBookCopies().add(new BookCopy(Long.parseLong(bookCopy.get(0)), book, importDate, false));
+
         }
         Database.INSTANCE.sortDB();
     }
@@ -52,13 +63,13 @@ public class CSVService {
         List<List<String>> customers = readCSVFile(filePath);
         boolean feesPayed = false;
         for (List<String> customer : customers) {
-            if (customer.get(5).equals("yes"))
+            if (customer.get(6).equals("yes"))
                 feesPayed = true;
-            if (customer.get(5).equals("no"))
+            if (customer.get(6).equals("no"))
                 feesPayed = false;
-            Database.INSTANCE.getCustomers().add(new Customer(Math.abs(new Random().nextLong()),
-                    new ArrayList<BookCopy>(), customer.get(0),
-                    customer.get(1), customer.get(2), customer.get(3), customer.get(4), feesPayed));
+            Database.INSTANCE.getCustomers().add(new Customer(Long.parseLong(customer.get(0)),
+                    new ArrayList<BookCopy>(), customer.get(1),
+                    customer.get(2), customer.get(3), customer.get(4), customer.get(5), feesPayed));
         }
         Database.INSTANCE.sortDB();
     }
@@ -94,6 +105,8 @@ public class CSVService {
         List<String[]> data = reader.readAll();
         List<List<String>> processedData = new ArrayList<>();
         for (String[] line : data) {
+            if(line.length == 0)
+                continue;
             processedData.add(Arrays.asList(line));
         }
         reader.close();
