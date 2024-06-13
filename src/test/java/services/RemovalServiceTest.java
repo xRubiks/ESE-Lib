@@ -16,9 +16,9 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DataAccessServiceTest {
+public class RemovalServiceTest {
 
-    private final DataAccessService dataAccessService = new DataAccessService();
+    private final RemovalService dataAccessService = new RemovalService();
     private BookCopy copy1;
 
     @BeforeEach

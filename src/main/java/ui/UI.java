@@ -1,7 +1,11 @@
 package ui;
 
+import services.CSVService;
+import services.RemovalService;
 import services.DataAccessService;
+import services.ReportingService;
 
+import java.net.SocketImpl;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -54,9 +58,34 @@ public class UI {
     private void selectOptionInMainMenu() {
         int option = getIntInputMinMax(1, 6);
         switch (option) {
-            case 1 -> lendBook();
-            case 2 -> returnBook();
-            case 3 -> searchBook();
+            case 1 -> {
+                System.out.println("enter customer ID: ");
+                long customerID = scanner.nextLong();
+                System.out.println("enter book copy ID ");
+                long bookCopyID = scanner.nextLong();
+                try {
+                    new DataAccessService().lendBookCopy(customerID, bookCopyID);
+                } catch (Exception ignored) {
+                } finally {
+                    scanner.nextLine();
+                }
+            }
+            case 2 -> {
+                System.out.println("enter customer ID: ");
+                long customerID = scanner.nextLong();
+                System.out.println("enter book copy ID: ");
+                long bookCopyID = scanner.nextLong();
+                try {
+                    new DataAccessService().returnBookCopy(customerID, bookCopyID);
+                } catch (Exception ignored) {
+                } finally {
+                    scanner.nextLine();
+                }
+            }
+            case 3 -> {
+                searchBook();
+
+            }
             case 4 -> manageBooks();
             case 5 -> manageCustomers();
             case 6 -> exit();
@@ -113,24 +142,19 @@ public class UI {
     private void selectOptionSearchMenu() {
         int option = getIntInputMinMax(1, 3);
         switch (option) {
-            case 1 -> searchBookByTitle();
-            case 2 -> searchBookByAuthor();
-            case 3 -> searchBookByISBN();
+            case 1 -> {
+                System.out.println("enter book author: ");
+                System.out.println(new DataAccessService().searchBookCopyByAuthor(scanner.nextLine()));
+            }
+            case 2 -> {
+                System.out.println("enter title: ");
+                System.out.println(new DataAccessService().searchBookCopyByTitle(scanner.nextLine()));
+            }
+            case 3 -> {
+                System.out.println("enter ISBN: ");
+                System.out.println(new DataAccessService().searchBookCopyByISBN(scanner.nextLine()));
+            }
         }
-    }
-
-    /**
-     * Demo method for lending books
-     */
-    private void lendBook() {
-        demo();
-    }
-
-    /**
-     * Demo method for returning books
-     */
-    private void returnBook() {
-        demo();
     }
 
     /**
@@ -158,30 +182,52 @@ public class UI {
     }
 
     private void clearCommandLine() {
-        for (int i = 0; i <= 50; i++)
+        for (int i = 0; i <= 100; i++)
             System.out.println();
     }
 
     private void selectOptionBooksMenu() {
         int option = getIntInputMinMax(1, 7);
         switch (option) {
-            case 1 -> demo();
+            case 1 -> {
+                System.out.println("enter filepath: ");
+                try {
+                    new CSVService().importBooksViaCSV(scanner.nextLine());
+                } catch (Exception ignored) {
+                } finally {
+                    scanner.nextLine();
+                }
+            }
             case 2 -> {
                 System.out.print("enter ISBN: ");
-                try { new DataAccessService().deleteBook(scanner.nextLine());} catch (Exception ignored) {} finally {
+                try {
+                    new RemovalService().deleteBook(scanner.nextLine());
+                } catch (Exception ignored) {
+                } finally {
                     scanner.nextLine();
                 }
             }
-            case 3 -> demo();
+            case 3 -> {
+                System.out.println("enter filepath: ");
+                try {
+                    new CSVService().importBookCopiesViaCSV(scanner.nextLine());
+                } catch (Exception ignored) {
+                } finally {
+                    scanner.nextLine();
+                }
+            }
             case 4 -> {
                 System.out.print("enter ID: ");
-                try { new DataAccessService().deleteBookCopy(scanner.nextLong());} catch (Exception ignored) {} finally {
+                try {
+                    new RemovalService().deleteBookCopy(scanner.nextLong());
+                } catch (Exception ignored) {
+                } finally {
                     scanner.nextLine();
                 }
             }
-            case 5 -> demo();
-            case 6 -> demo();
-            case 7 -> demo();
+            case 5 -> new ReportingService().issueAllBooks();
+            case 6 -> new ReportingService().issueNotLentCopies();
+            case 7 -> new ReportingService().issueLentCopies();
         }
     }
 
@@ -199,65 +245,46 @@ public class UI {
 
         selectOptionCustomerMenu();
 
-       System.out.println("Press Enter to continue...");
-       scanner.nextLine();
+        System.out.println("Press Enter to continue...");
+        scanner.nextLine();
 
-       clearCommandLine();
+        clearCommandLine();
     }
 
     private void selectOptionCustomerMenu() {
         int option = getIntInputMinMax(1, 4);
         switch (option) {
-            case 1 -> demo();
-            case 2 -> {
-                System.out.print("enter ID: ");
-                try { new DataAccessService().deleteCustomer(scanner.nextLong());} catch (Exception ignored) {} finally {
+            case 1 -> {
+                System.out.println("enter filepath: ");
+                try {
+                    new CSVService().importCustomersViaCSV(scanner.nextLine());
+                } catch (Exception ignored) {
+                } finally {
                     scanner.nextLine();
                 }
             }
-            case 3 -> demo();
-            case 4 -> demo();
+            case 2 -> {
+                System.out.print("enter ID: ");
+                try {
+                    new RemovalService().deleteCustomer(scanner.nextLong());
+                } catch (Exception ignored) {
+                } finally {
+                    scanner.nextLine();
+                }
+            }
+            case 3 -> new ReportingService().issueCustomers();
+            case 4 -> {
+                System.out.println("enter customer ID: ");
+                new ReportingService().issueCustomersCopies(scanner.nextLong());
+            }
         }
     }
-
-    /**
-     * demo method for searching a book by it`s title
-     */
-    private void searchBookByTitle() {
-        demo();
-    }
-
-    /**
-     * Demo method for searching a book by it`s author
-     */
-    private void searchBookByAuthor() {
-        demo();
-    }
-
-    /**
-     * Demo method for searching a book by it`s ISBN
-     */
-    private void searchBookByISBN() {
-        demo();
-    }
-
 
     /**
      * Method to exit the program
      */
     private void exit() {
         running = false;
-    }
-
-
-    /**
-     * Method displaying a demo message and redirecting back to the main menu
-     */
-    private void demo() {
-        System.out.println("\nThis function has not yet been implemented,\nyou will be returned to " +
-                "the main menu\n");
-        System.out.println("Press enter to continue...");
-        scanner.nextLine();
     }
 
 }
