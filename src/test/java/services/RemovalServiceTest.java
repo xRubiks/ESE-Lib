@@ -27,8 +27,8 @@ public class RemovalServiceTest {
         Database.INSTANCE.getBooks().clear();
         Database.INSTANCE.getBookCopies().clear();
 
-        Customer customer1 = new Customer(1, new ArrayList<>());
-        Customer customer2 = new Customer(2, new ArrayList<>());
+        Customer customer1 = new Customer(1, new ArrayList<>(), "Mairle", "Moritz");
+        Customer customer2 = new Customer(2, new ArrayList<>(), "Hadar", "Quentin");
 
         Book book1 = new Book("1", "title1", Arrays.asList("Peter", "Quentin"), 1900, "city1", "publisher1", 0);
         Book book2 = new Book("2", "title2", Arrays.asList("Emily", "Nora"), 1900, "city2", "publisher2", 0);

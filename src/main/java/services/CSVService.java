@@ -73,6 +73,7 @@ public class CSVService {
                     .add(new Book(book.get(0), book.get(1), Arrays.stream(book.get(2).split("/")).toList(), //we assume Authors are split via /
                             Integer.parseInt(book.get(3)), book.get(4), book.get(5), Integer.parseInt(book.get(6))));
         }
+        Database.INSTANCE.sortDB();
     }
 
     /**

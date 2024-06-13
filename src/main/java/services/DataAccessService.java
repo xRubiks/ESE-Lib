@@ -91,7 +91,6 @@ public class DataAccessService {
         bookCopy.setLentDate(new Date());
         bookCopy.setLent(true);
         customer.getBookCopies().add(bookCopy);
-
      }
 
     /**
@@ -101,9 +100,8 @@ public class DataAccessService {
      * @param bookCopyId The ID of the book copy to be returned.
      * @throws BookCopyNotFoundException If the book copy with the given ID is not found.
      * @throws CustomerNotFoundException If the customer with the given ID is not found.
-     * @throws InvalidStateException     If the book copy has been lent for more than 21 days.
      */
-    public void returnBookCopy(long customerId, long bookCopyId) throws BookCopyNotFoundException, CustomerNotFoundException, InvalidStateException {
+    public void returnBookCopy(long customerId, long bookCopyId) throws BookCopyNotFoundException, CustomerNotFoundException {
         BookCopy copy = Database.INSTANCE.getBookCopies()
                 .stream()
                 .filter(c -> c.getId() == bookCopyId)
@@ -120,13 +118,14 @@ public class DataAccessService {
             long daysSinceLent = ChronoUnit.DAYS.between(copy.getLentDate().toInstant(), Instant.now());
             if (daysSinceLent > 21) {
                 customer.setFeesPayed(false);
-                throw new InvalidStateException("Lent date is greater than 21 days");
+                System.out.println("Customer needs to pay fees");
             }
         }
 
         customer.getBookCopies().remove(copy);
         copy.setLent(false);
         copy.setLentDate(null);
+        Database.INSTANCE.sortDB();
     }
 
 
