@@ -80,7 +80,7 @@ public class DataAccessService {
                 .orElseThrow(() -> new CustomerNotFoundException(String.format("could not find customer with id: %d", customerId)));
 
         if (customer.getBookCopies().size() >= 5)
-            throw new InvalidStateException("Customer has more than 5 copies");
+            throw new InvalidStateException("Customer has more than copies than allowed");
 
         if (!customer.isFeesPayed())
             throw new InvalidStateException("Customer has not payed fees");

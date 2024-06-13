@@ -26,10 +26,19 @@ public enum Database {
         return customers;
     }
 
+    public void sortDB() {
+        if(!bookCopies.isEmpty())
+            bookCopies.sort(Comparator.comparing(bookCopy -> bookCopy.getBook().getTitle()));
+        if(!books.isEmpty())
+            books.sort(Comparator.comparing(Book::getTitle));
+        if(!customers.isEmpty())
+            customers.sort(Comparator.comparing(Customer::getLastName).thenComparing(Customer::getFirstName));
+    }
+
 
     public void init() {
-        Customer customer1 = new Customer(new Random().nextLong(), new ArrayList<>());
-        Customer customer2 = new Customer(new Random().nextLong(), new ArrayList<>());
+        Customer customer1 = new Customer(Math.abs(new Random().nextLong()), new ArrayList<>(), "Mairle", "Molitz");
+        Customer customer2 = new Customer(Math.abs(new Random().nextLong()), new ArrayList<>(), "Hadar", "Quentin");
 
         Book book1 = new Book(UUID.randomUUID().toString(), "title1", Arrays.asList("Peter", "Quentin"), 1900, "city1", "publisher1", 0);
         Book book2 = new Book(UUID.randomUUID().toString(), "title2", Arrays.asList("Emily", "Nora"), 1900, "city2", "publisher2", 0);

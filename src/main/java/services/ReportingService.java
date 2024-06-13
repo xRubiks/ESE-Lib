@@ -11,7 +11,6 @@ import exceptions.CustomerNotFoundException;
  */
 public class ReportingService {
 
-    //TODO SORTED OUTPUT
     /**
      * Prints information about all books in the library system.
      */

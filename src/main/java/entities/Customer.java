@@ -13,11 +13,6 @@ public class Customer {
     private String city;
     private boolean feesPayed;
 
-    public Customer(long id, List<BookCopy> bookCopies) {
-        this.id = id;
-        this.bookCopies = bookCopies;
-        this.feesPayed = true;
-    }
 
     public Customer(long id, List<BookCopy> bookCopies, String lastName, String firstName) {
         this.id = id;

@@ -51,7 +51,7 @@ public class RemovalServiceTest {
     }
 
     @Test
-    public void deleteCustomerIdCouldntFind() {
+    public void deleteCustomerIdCouldNotFind() {
         assertThrows(CustomerNotFoundException.class, () -> dataAccessService.deleteCustomer(10));
         assertEquals(2, Database.INSTANCE.getCustomers().size());
     }

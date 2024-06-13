@@ -37,6 +37,7 @@ public class CSVService {
                     .orElseThrow(() -> new InvalidStateException("No book copy with given ISBN found"));
             Database.INSTANCE.getBookCopies().add(new BookCopy(new Random().nextLong(), book));
         }
+        Database.INSTANCE.sortDB();
     }
 
     /**
@@ -54,6 +55,7 @@ public class CSVService {
                     new ArrayList<BookCopy>(), customer.get(0),
                     customer.get(1), customer.get(2), customer.get(3), customer.get(4)));
         }
+        Database.INSTANCE.sortDB();
     }
 
     /**
@@ -68,7 +70,7 @@ public class CSVService {
         List<List<String>> books = readCSVFile(filePath);
         for (List<String> book : books) {
             Database.INSTANCE.getBooks()
-                    .add(new Book(book.get(0), book.get(1), Arrays.stream(book.get(2).split("/")).toList(), //we assume Authors are splitted via /
+                    .add(new Book(book.get(0), book.get(1), Arrays.stream(book.get(2).split("/")).toList(), //we assume Authors are split via /
                             Integer.parseInt(book.get(3)), book.get(4), book.get(5), Integer.parseInt(book.get(6))));
         }
     }
