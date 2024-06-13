@@ -13,24 +13,15 @@ public class Customer {
     private String city;
     private boolean feesPayed;
 
-
-    public Customer(long id, List<BookCopy> bookCopies, String lastName, String firstName) {
+    public Customer(long id, List<BookCopy> bookCopies, String lastName, String firstName, String address, String zipCode, String city, boolean feesPayed) {
         this.id = id;
         this.bookCopies = bookCopies;
-        this.feesPayed = true;
-        this.lastName = lastName;
-        this.firstName = firstName;
-    }
-
-    public Customer(long id, List<BookCopy> bookCopies, String lastName, String firstName, String address, String zipCode, String city) {
-        this.id = id;
-        this.bookCopies = bookCopies;
-        this.feesPayed = true;
         this.lastName = lastName;
         this.firstName = firstName;
         this.address = address;
         this.zipCode = zipCode;
         this.city = city;
+        this.feesPayed = feesPayed;
     }
 
     public long getId() {

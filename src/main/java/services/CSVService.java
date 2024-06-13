@@ -50,10 +50,15 @@ public class CSVService {
      */
     public void importCustomersViaCSV(String filePath) throws IOException, CsvException {
         List<List<String>> customers = readCSVFile(filePath);
+        boolean feesPayed = false;
         for (List<String> customer : customers) {
-            Database.INSTANCE.getCustomers().add(new Customer(new Random().nextLong(),
+            if (customer.get(5).equals("yes"))
+                feesPayed = true;
+            if (customer.get(5).equals("no"))
+                feesPayed = false;
+            Database.INSTANCE.getCustomers().add(new Customer(Math.abs(new Random().nextLong()),
                     new ArrayList<BookCopy>(), customer.get(0),
-                    customer.get(1), customer.get(2), customer.get(3), customer.get(4)));
+                    customer.get(1), customer.get(2), customer.get(3), customer.get(4), feesPayed));
         }
         Database.INSTANCE.sortDB();
     }

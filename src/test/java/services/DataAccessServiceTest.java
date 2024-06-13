@@ -32,8 +32,8 @@ class DataAccessServiceTest {
         Database.INSTANCE.getBookCopies().clear();
 
 
-        Customer customer1 = new Customer(1, new ArrayList<>(), "Mairle" , "Molitz");
-        Customer customer2 = new Customer(2, new ArrayList<>(), "Hadar", "Quentin");
+        Customer customer1 = new Customer(1, new ArrayList<>(), "Mairle" , "Molitz", "Auf der Farm 1", "007007", "Sturgard", true);
+        Customer customer2 = new Customer(2, new ArrayList<>(), "Hadar", "Quentin", "Auf der Lauer 3", "00000", "Suttgart", true);
         cust1 = customer1;
 
         Book book1 = new Book("1", "title1", Arrays.asList("Molitz", "Quentin"), 1900, "city1", "publisher1", 0);

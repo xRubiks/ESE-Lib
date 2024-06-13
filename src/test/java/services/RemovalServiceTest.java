@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,8 +28,8 @@ public class RemovalServiceTest {
         Database.INSTANCE.getBooks().clear();
         Database.INSTANCE.getBookCopies().clear();
 
-        Customer customer1 = new Customer(1, new ArrayList<>(), "Mairle", "Moritz");
-        Customer customer2 = new Customer(2, new ArrayList<>(), "Hadar", "Quentin");
+        Customer customer1 = new Customer(1, new ArrayList<>(), "Mairle", "Molitz", "Auf der Lauer 12", "712737", "Kafka", true);
+        Customer customer2 = new Customer(2, new ArrayList<>(), "Hadar", "Quentin", "Auf der Heide 22", "71032", "Böplingen", false);
 
         Book book1 = new Book("1", "title1", Arrays.asList("Peter", "Quentin"), 1900, "city1", "publisher1", 0);
         Book book2 = new Book("2", "title2", Arrays.asList("Emily", "Nora"), 1900, "city2", "publisher2", 0);

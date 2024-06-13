@@ -37,8 +37,8 @@ public enum Database {
 
 
     public void init() {
-        Customer customer1 = new Customer(Math.abs(new Random().nextLong()), new ArrayList<>(), "Mairle", "Molitz");
-        Customer customer2 = new Customer(Math.abs(new Random().nextLong()), new ArrayList<>(), "Hadar", "Quentin");
+        Customer customer1 = new Customer(Math.abs(new Random().nextLong()), new ArrayList<>(), "Mairle", "Molitz", "Auf der Lauer 12", "712737", "Eichendorf", true);
+        Customer customer2 = new Customer(Math.abs(new Random().nextLong()), new ArrayList<>(), "Hadar", "Quentin", "Auf der Heide 22", "71032", "Kaffka", false);
 
         Book book1 = new Book(UUID.randomUUID().toString(), "title1", Arrays.asList("Peter", "Quentin"), 1900, "city1", "publisher1", 0);
         Book book2 = new Book(UUID.randomUUID().toString(), "title2", Arrays.asList("Emily", "Nora"), 1900, "city2", "publisher2", 0);
