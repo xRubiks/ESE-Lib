@@ -5,110 +5,132 @@ import entities.Book;
 import entities.BookCopy;
 import entities.Customer;
 import exceptions.BookCopyNotFoundException;
-import exceptions.BookNotFoundException;
 import exceptions.CustomerNotFoundException;
 import exceptions.InvalidStateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DataAccessServiceTest {
+class DataAccessServiceTest {
 
     private final DataAccessService dataAccessService = new DataAccessService();
     private BookCopy copy1;
+    private Customer cust1;
 
-    @BeforeEach
-    public void setup() {
-        Database.INSTANCE.getCustomers().clear();
-        Database.INSTANCE.getBooks().clear();
-        Database.INSTANCE.getBookCopies().clear();
 
-        Customer customer1 = new Customer(1, new ArrayList<>());
-        Customer customer2 = new Customer(2, new ArrayList<>());
-
-        Book book1 = new Book("1", "title1", Arrays.asList("Peter", "Quentin"), 1900, "city1", "publisher1", 0);
-        Book book2 = new Book("2", "title2", Arrays.asList("Emily", "Nora"), 1900, "city2", "publisher2", 0);
-
-        BookCopy bookCopy1 = new BookCopy(1, book1);
-        BookCopy bookCopy2 = new BookCopy(2, book2);
-        BookCopy bookCopy3 = new BookCopy(3, book1);
-
-        copy1 = bookCopy1;
-
-        Database.INSTANCE.getCustomers().addAll(Arrays.asList(customer1, customer2));
-        Database.INSTANCE.getBooks().addAll(Arrays.asList(book1, book2));
-        Database.INSTANCE.getBookCopies().addAll(Arrays.asList(bookCopy1, bookCopy2, bookCopy3));
+    @Test
+    public void searchBookCopyByTitleWasSuccessful() {
+        List<BookCopy> bookCopyList = dataAccessService.searchBookCopyByTitle("title1");
+        assertEquals("title1", dataAccessService.searchBookCopyByTitle("title1").get(0).getBook().getTitle());
     }
 
     @Test
-    public void deleteCustomerWorksRight() {
-        try { dataAccessService.deleteCustomer(1); } catch (Exception ignored) {}
-        assertTrue(Database.INSTANCE.getCustomers().stream().noneMatch(c -> c.getId() == 1));
+    public void searchBookCopyByTitleWasNotSuccessful() {
+        assertTrue(dataAccessService.searchBookCopyByAuthor("SOOOS").isEmpty());
+    }
+
+
+    @Test
+    public void searchBookCopyByAuthorTest() {
+        List<BookCopy> list = dataAccessService.searchBookCopyByAuthor("Quentin");
+
+        assertEquals(1, list.get(0).getId());
+        assertEquals(3, list.get(1).getId());
+
+        assertTrue(dataAccessService.searchBookCopyByAuthor("LOL").isEmpty());
+    }
+
+
+    @Test
+    public void lendCopySuccessful() throws BookCopyNotFoundException, InvalidStateException, CustomerNotFoundException {
+        dataAccessService.lendBookCopy(1, 1);
+        assertTrue(copy1.isLent());
+        assertEquals(copy1, cust1.getBookCopies().get(0));
     }
 
     @Test
-    public void deleteCustomerIdCouldntFind() {
-        assertThrows(CustomerNotFoundException.class, () -> dataAccessService.deleteCustomer(10));
-        assertEquals(2, Database.INSTANCE.getCustomers().size());
+    public void lendBookCopyThrowsCustomerNotFoundException() {
+        assertThrows(CustomerNotFoundException.class, () -> dataAccessService.lendBookCopy(5, 1));
     }
 
     @Test
-    public void deleteCustomerFeesUnpaid() {
-        Database.INSTANCE.getCustomers().get(0).setFeesPayed(false);
-        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteCustomer(1));
-        assertTrue(Database.INSTANCE.getCustomers().stream().anyMatch(c -> c.getId() == 1));
+    public void lendBookCopyThrowsBookCopyNotFoundException() {
+        assertThrows(BookCopyNotFoundException.class, () -> dataAccessService.lendBookCopy(1, -1));
     }
 
     @Test
-    public void deleteCustomerCopiesLent() {
-        Database.INSTANCE.getCustomers().get(0).getBookCopies().add(copy1);
-        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteCustomer(1));
-        assertTrue(Database.INSTANCE.getCustomers().stream().anyMatch(c -> c.getId() == 1));
+    public void lendBookCopyIsAlreadyLentThrowsInvalidStateException() throws BookCopyNotFoundException, InvalidStateException, CustomerNotFoundException {
+        dataAccessService.lendBookCopy(1,1);
+        assertThrows(InvalidStateException.class, () -> dataAccessService.lendBookCopy(2, 1));
     }
 
     @Test
-    public void deleteBookCopyWorksRight(){
-        try { dataAccessService.deleteBookCopy(1); } catch (Exception ignored) {}
-        assertTrue(Database.INSTANCE.getBookCopies().stream().noneMatch(bc -> bc.getId() == 1));
+    public void lendBookCopyUnpaidFeesThrowsInvalidStateException() {
+        cust1.setFeesPayed(false);
+        assertThrows(InvalidStateException.class, () -> dataAccessService.lendBookCopy(1, 1));
     }
 
     @Test
-    public void deleteBookCopyIdCouldNotFind(){
-        assertThrows(BookCopyNotFoundException.class, () -> dataAccessService.deleteBookCopy(Long.MIN_VALUE));
-        assertEquals(3, Database.INSTANCE.getBookCopies().size());
+    public void lendBookCopyReachedLimitThrowsInvalidStateException() throws BookCopyNotFoundException, InvalidStateException, CustomerNotFoundException {
+        dataAccessService.lendBookCopy(1, 1);
+        dataAccessService.lendBookCopy(1, 2);
+        dataAccessService.lendBookCopy(1, 3);
+        dataAccessService.lendBookCopy(1, 4);
+        dataAccessService.lendBookCopy(1, 5);
+        assertThrows(InvalidStateException.class, () -> dataAccessService.lendBookCopy(1, 6));
     }
 
     @Test
-    public void deleteBookCopyIsLent(){
-        copy1.setLent(true);
-        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteBookCopy(1));
-        assertTrue(Database.INSTANCE.getBookCopies().stream().anyMatch(c -> c.getId() == 1));
+    public void SearchBookCopyByISBNFound() {
+        List<BookCopy> result = dataAccessService.searchBookCopyByISBN("1");
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(4, result.size());
     }
 
     @Test
-    public void deleteBookWorksRight(){
-        try {
-            dataAccessService.deleteBook("1");
-        } catch (Exception ignored) {}
-        assertTrue(Database.INSTANCE.getBooks().stream().noneMatch(b -> b.getIsbn().equals("1")));
-        assertTrue(Database.INSTANCE.getBookCopies().stream().noneMatch(c -> c.getBook().getIsbn().equals("1")));
+    public void SearchBookCopyByISBNNotFound(){
+        List<BookCopy> result = dataAccessService.searchBookCopyByISBN("1111111");
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 
     @Test
-    public void deleteBookIsbnNotFound(){
-        assertThrows(BookNotFoundException.class, () -> dataAccessService.deleteBook(String.valueOf(6)));
-        assertEquals(2, Database.INSTANCE.getBooks().size());
+    public void returnBookCopyTest() throws BookCopyNotFoundException, InvalidStateException, CustomerNotFoundException {
+        dataAccessService.lendBookCopy(1, 1);
+        assertTrue(copy1.isLent());
+        assertFalse(cust1.getBookCopies().isEmpty());
+
+        dataAccessService.returnBookCopy(1,1);
+        assertFalse(copy1.isLent());
+        assertTrue(cust1.getBookCopies().isEmpty());
     }
 
     @Test
-    public void deleteBookIsLent(){
-        copy1.setLent(true);
-        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteBook("1"));
-        assertTrue(Database.INSTANCE.getBooks().stream().anyMatch(b -> b.getIsbn().equals("1")));
+    public void returnBookCopyTestThrowsBookCopyNotFoundException() {
+        assertThrows(BookCopyNotFoundException.class, () -> dataAccessService.returnBookCopy(1, 30));
     }
 
+    @Test
+    public void returnBookCopyTestThrowsCustomerNotFoundException(){
+        assertThrows(CustomerNotFoundException.class, () -> dataAccessService.returnBookCopy(648868, 1));
+    }
+
+    @Test
+    public void returnBookCopyExceededLoanPeriodLimit() throws BookCopyNotFoundException, InvalidStateException, CustomerNotFoundException {
+        dataAccessService.lendBookCopy(1, 1);
+        copy1.setLentDate(Date.from(Instant.now().minus(200, ChronoUnit.DAYS)));
+        dataAccessService.returnBookCopy(1, 1);
+        assertFalse(cust1.isFeesPayed());
+        assertFalse(copy1.isLent());
+        assertTrue(cust1.getBookCopies().isEmpty());
+    }
 }
