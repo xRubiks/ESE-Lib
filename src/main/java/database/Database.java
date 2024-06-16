@@ -26,6 +26,14 @@ public enum Database {
         return customers;
     }
 
+    public void sortDB() {
+        if(!bookCopies.isEmpty())
+            bookCopies.sort(Comparator.comparing(bookCopy -> bookCopy.getBook().getTitle()));
+        if(!books.isEmpty())
+            books.sort(Comparator.comparing(Book::getTitle));
+        if(!customers.isEmpty())
+            customers.sort(Comparator.comparing(Customer::getLastName).thenComparing(Customer::getFirstName));
+    }
 
     public void init() {
         Customer customer1 = new Customer(new Random().nextLong(), new ArrayList<>());
