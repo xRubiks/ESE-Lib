@@ -26,6 +26,34 @@ class DataAccessServiceTest {
     private Customer cust1;
 
 
+    @BeforeEach
+    public void setup() {
+        Database.INSTANCE.getCustomers().clear();
+        Database.INSTANCE.getBooks().clear();
+        Database.INSTANCE.getBookCopies().clear();
+
+
+        Customer customer1 = new Customer(1, new ArrayList<>(), "Mairle" , "Molitz", "Auf der Farm 1", "007007", "Sturgard", true);
+        Customer customer2 = new Customer(2, new ArrayList<>(), "Hadar", "Quentin", "Auf der Lauer 3", "00000", "Suttgart", true);
+        cust1 = customer1;
+
+        Book book1 = new Book("1", "title1", Arrays.asList("Molitz", "Quentin"), 1900, "city1", "publisher1", 0);
+        Book book2 = new Book("2", "title2", Arrays.asList("Emily", "Nora"), 1900, "city2", "publisher2", 0);
+
+        BookCopy bookCopy1 = new BookCopy(1, book1, new Date(), false);
+        BookCopy bookCopy2 = new BookCopy(2, book2, new Date(), false);
+        BookCopy bookCopy3 = new BookCopy(3, book1, new Date(), false);
+        BookCopy bookCopy4 = new BookCopy(4, book1, new Date(), false);
+        BookCopy bookCopy5 = new BookCopy(5, book2, new Date(), false);
+        BookCopy bookCopy6 = new BookCopy(6, book1, new Date(), false);
+        copy1 = bookCopy1;
+
+        Database.INSTANCE.getCustomers().addAll(Arrays.asList(customer1, customer2));
+        Database.INSTANCE.getBooks().addAll(Arrays.asList(book1, book2));
+        Database.INSTANCE.getBookCopies().addAll(Arrays.asList(bookCopy1, bookCopy2, bookCopy3, bookCopy4, bookCopy5, bookCopy6));
+
+    }
+
     @Test
     public void searchBookCopyByTitleWasSuccessful() {
         List<BookCopy> bookCopyList = dataAccessService.searchBookCopyByTitle("title1");
