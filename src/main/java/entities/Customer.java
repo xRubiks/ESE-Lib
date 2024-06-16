@@ -13,29 +13,15 @@ public class Customer {
     private String city;
     private boolean feesPayed;
 
-    public Customer(long id, List<BookCopy> bookCopies) {
+    public Customer(long id, List<BookCopy> bookCopies, String lastName, String firstName, String address, String zipCode, String city, boolean feesPayed) {
         this.id = id;
         this.bookCopies = bookCopies;
-        this.feesPayed = true;
-    }
-
-    public Customer(long id, List<BookCopy> bookCopies, String lastName, String firstName) {
-        this.id = id;
-        this.bookCopies = bookCopies;
-        this.feesPayed = true;
-        this.lastName = lastName;
-        this.firstName = firstName;
-    }
-
-    public Customer(long id, List<BookCopy> bookCopies, String lastName, String firstName, String address, String zipCode, String city) {
-        this.id = id;
-        this.bookCopies = bookCopies;
-        this.feesPayed = true;
         this.lastName = lastName;
         this.firstName = firstName;
         this.address = address;
         this.zipCode = zipCode;
         this.city = city;
+        this.feesPayed = feesPayed;
     }
 
     public long getId() {
@@ -96,6 +82,6 @@ public class Customer {
 
     @Override
     public String toString() {
-        return String.format("ID: %d, Last name: %s, First name: %s, FeesPayed-Status: %b, Number of books lent: %d | [Customer] \n", id, lastName, firstName, isFeesPayed(), getBookCopies().size());
+        return String.format("ID: %d, Last name: %s, First name: %s, FeesPayed-Status: %b, Number of books lent: %d | [Customer]\n", id, lastName, firstName, isFeesPayed(), getBookCopies().size());
     }
 }
