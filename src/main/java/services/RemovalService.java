@@ -13,7 +13,7 @@ import exceptions.InvalidStateException;
  * This class provides methods to interact with the data access layer,
  * allowing manipulation of customer, book, and book copy data.
  */
-public class DataAccessService {
+public class RemovalService {
 
     Database database = Database.INSTANCE;
 

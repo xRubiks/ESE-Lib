@@ -16,9 +16,9 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DataAccessServiceTest {
+public class RemovalServiceTest {
 
-    private final DataAccessService dataAccessService = new DataAccessService();
+    private final RemovalService removalService = new RemovalService();
     private BookCopy copy1;
 
     @BeforeEach
@@ -46,53 +46,53 @@ public class DataAccessServiceTest {
 
     @Test
     public void deleteCustomerWorksRight() {
-        try { dataAccessService.deleteCustomer(1); } catch (Exception ignored) {}
+        try { removalService.deleteCustomer(1); } catch (Exception ignored) {}
         assertTrue(Database.INSTANCE.getCustomers().stream().noneMatch(c -> c.getId() == 1));
     }
 
     @Test
     public void deleteCustomerIdCouldntFind() {
-        assertThrows(CustomerNotFoundException.class, () -> dataAccessService.deleteCustomer(10));
+        assertThrows(CustomerNotFoundException.class, () -> removalService.deleteCustomer(10));
         assertEquals(2, Database.INSTANCE.getCustomers().size());
     }
 
     @Test
     public void deleteCustomerFeesUnpaid() {
         Database.INSTANCE.getCustomers().get(0).setFeesPayed(false);
-        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteCustomer(1));
+        assertThrows(InvalidStateException.class, () -> removalService.deleteCustomer(1));
         assertTrue(Database.INSTANCE.getCustomers().stream().anyMatch(c -> c.getId() == 1));
     }
 
     @Test
     public void deleteCustomerCopiesLent() {
         Database.INSTANCE.getCustomers().get(0).getBookCopies().add(copy1);
-        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteCustomer(1));
+        assertThrows(InvalidStateException.class, () -> removalService.deleteCustomer(1));
         assertTrue(Database.INSTANCE.getCustomers().stream().anyMatch(c -> c.getId() == 1));
     }
 
     @Test
     public void deleteBookCopyWorksRight(){
-        try { dataAccessService.deleteBookCopy(1); } catch (Exception ignored) {}
+        try { removalService.deleteBookCopy(1); } catch (Exception ignored) {}
         assertTrue(Database.INSTANCE.getBookCopies().stream().noneMatch(bc -> bc.getId() == 1));
     }
 
     @Test
     public void deleteBookCopyIdCouldNotFind(){
-        assertThrows(BookCopyNotFoundException.class, () -> dataAccessService.deleteBookCopy(Long.MIN_VALUE));
+        assertThrows(BookCopyNotFoundException.class, () -> removalService.deleteBookCopy(Long.MIN_VALUE));
         assertEquals(3, Database.INSTANCE.getBookCopies().size());
     }
 
     @Test
     public void deleteBookCopyIsLent(){
         copy1.setLent(true);
-        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteBookCopy(1));
+        assertThrows(InvalidStateException.class, () -> removalService.deleteBookCopy(1));
         assertTrue(Database.INSTANCE.getBookCopies().stream().anyMatch(c -> c.getId() == 1));
     }
 
     @Test
     public void deleteBookWorksRight(){
         try {
-            dataAccessService.deleteBook("1");
+            removalService.deleteBook("1");
         } catch (Exception ignored) {}
         assertTrue(Database.INSTANCE.getBooks().stream().noneMatch(b -> b.getIsbn().equals("1")));
         assertTrue(Database.INSTANCE.getBookCopies().stream().noneMatch(c -> c.getBook().getIsbn().equals("1")));
@@ -100,14 +100,14 @@ public class DataAccessServiceTest {
 
     @Test
     public void deleteBookIsbnNotFound(){
-        assertThrows(BookNotFoundException.class, () -> dataAccessService.deleteBook(String.valueOf(6)));
+        assertThrows(BookNotFoundException.class, () -> removalService.deleteBook(String.valueOf(6)));
         assertEquals(2, Database.INSTANCE.getBooks().size());
     }
 
     @Test
     public void deleteBookIsLent(){
         copy1.setLent(true);
-        assertThrows(InvalidStateException.class, () -> dataAccessService.deleteBook("1"));
+        assertThrows(InvalidStateException.class, () -> removalService.deleteBook("1"));
         assertTrue(Database.INSTANCE.getBooks().stream().anyMatch(b -> b.getIsbn().equals("1")));
     }
 

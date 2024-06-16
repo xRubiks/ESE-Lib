@@ -1,6 +1,6 @@
 package ui;
 
-import services.DataAccessService;
+import services.RemovalService;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -168,14 +168,14 @@ public class UI {
             case 1 -> demo();
             case 2 -> {
                 System.out.print("enter ISBN: ");
-                try { new DataAccessService().deleteBook(scanner.nextLine());} catch (Exception ignored) {} finally {
+                try { new RemovalService().deleteBook(scanner.nextLine());} catch (Exception ignored) {} finally {
                     scanner.nextLine();
                 }
             }
             case 3 -> demo();
             case 4 -> {
                 System.out.print("enter ID: ");
-                try { new DataAccessService().deleteBookCopy(scanner.nextLong());} catch (Exception ignored) {} finally {
+                try { new RemovalService().deleteBookCopy(scanner.nextLong());} catch (Exception ignored) {} finally {
                     scanner.nextLine();
                 }
             }
@@ -211,7 +211,7 @@ public class UI {
             case 1 -> demo();
             case 2 -> {
                 System.out.print("enter ID: ");
-                try { new DataAccessService().deleteCustomer(scanner.nextLong());} catch (Exception ignored) {} finally {
+                try { new RemovalService().deleteCustomer(scanner.nextLong());} catch (Exception ignored) {} finally {
                     scanner.nextLine();
                 }
             }
