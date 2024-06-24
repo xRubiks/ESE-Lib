@@ -8,10 +8,10 @@ Alle Übungsblätter zusammen bestehen aus 150 Punkten, von denen 75 Punkte für
 | ----------------------- | ---------------------------------- |
 | 01: Spezifikation       | 16 / 25                               |
 | 02: Testfall-Erstellung | 20 / 25                               |
-| 03: Implementierung     | / 50                               |
+| 03: Implementierung     | 24 / 50                               |
 | 04: Wartung & Evolution | / 25                               |
 | 05: Qualitätssicherung  | / 25                               |
-| **Summe**:              | / 150                              |
+| **Summe**:              | 60 / 150                              |
 
 ## Feedback zur ÜB 01 (erreichte Punkte: 16)
 
@@ -46,3 +46,14 @@ README fehlt mit Instruktionen zum kompilieren uns ausführen [-2P]
 ### Aufgabe 3
 
 fehlt [-5P]
+
+## Feedback zur ÜB 03 (erreichte Punkte: 24)
+
+### Aufgabe 4
+
+- Über `mvn test` werden Tests nicht ausgeführt [-3P]
+- Import CSV von allen 3 Entitäten keine Fehlerfälle getestet [-3P]
+
+### Aufgabe 5
+
+Nicht in CLI ausführbar [-20]
