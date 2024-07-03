@@ -11,10 +11,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * This class provides functionalities for searching book copies.
+ * This class provides functionalities for searching data and for rental management.
  */
 public class DataAccessService {
 
@@ -27,7 +26,7 @@ public class DataAccessService {
     public List<BookCopy> searchBookCopyByTitle(String title) {
         return Database.INSTANCE.getBookCopies()
                 .stream()
-                .filter(bookCopy -> Objects.equals(bookCopy.getBook().getTitle(), title))
+                .filter(bookCopy -> (bookCopy.getBook().getTitle().contains(title)))
                 .toList();
     }
 
@@ -41,7 +40,7 @@ public class DataAccessService {
     public List<BookCopy> searchBookCopyByAuthor(String author) {
         return Database.INSTANCE.getBookCopies()
                 .stream()
-                .filter(copy -> copy.getBook().getAuthors().contains(author))
+                .filter(copy -> copy.getBook().getAuthors().stream().anyMatch(authorName -> authorName.contains(author)))
                 .toList();
     }
 
@@ -91,7 +90,7 @@ public class DataAccessService {
         bookCopy.setLentDate(new Date());
         bookCopy.setLent(true);
         customer.getBookCopies().add(bookCopy);
-     }
+    }
 
     /**
      * Returns a book copy from a customer.

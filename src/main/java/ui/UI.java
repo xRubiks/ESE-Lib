@@ -1,8 +1,8 @@
 package ui;
 
 import services.CSVService;
-import services.RemovalService;
 import services.DataAccessService;
+import services.RemovalService;
 import services.ReportingService;
 
 import java.util.InputMismatchException;
@@ -167,9 +167,10 @@ public class UI {
         System.out.println("[4] Delete a book copy via it`s ID");
         System.out.println("[5] Get a list of all books");
         System.out.println("[6] Get a list of all currently not lent book copies");
-        System.out.println("[7] Get a list of all currently lent books \n");
+        System.out.println("[7] Get a list of all currently lent books");
+        System.out.println("[8] Get a list of the number of book copies per publisher \n");
 
-        System.out.format("To choose, enter a number between 1 and 7: "); //TODO: bessere Formulierungen finden
+        System.out.format("To choose, enter a number between 1 and 8: ");
 
         selectOptionBooksMenu();
 
@@ -181,12 +182,16 @@ public class UI {
     }
 
     private void clearCommandLine() {
-        for (int i = 0; i <= 100; i++)
+        System.out.println("---------------------------------------------");
+        for (int i = 0; i <= 5; i++)
             System.out.println();
+        System.out.println("---------------------------------------------");
+        System.out.println();
+
     }
 
     private void selectOptionBooksMenu() {
-        int option = getIntInputMinMax(1, 7);
+        int option = getIntInputMinMax(1, 8);
         switch (option) {
             case 1 -> {
                 System.out.println("enter filepath: ");
@@ -227,6 +232,8 @@ public class UI {
             case 5 -> new ReportingService().printAllBooks();
             case 6 -> new ReportingService().printAllNonLentCopies();
             case 7 -> new ReportingService().printAllLentCopies();
+            case 8 -> new ReportingService().printBooksPerPublisher();
+
         }
     }
 

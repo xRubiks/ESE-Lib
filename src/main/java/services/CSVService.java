@@ -12,10 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class provides functionalities to import data from CSV files
@@ -34,22 +31,39 @@ public class CSVService {
      * @throws InvalidStateException If a book with the provided ISBN cannot be found in the database.
      */
     public void importBookCopiesViaCSV(String filePath) throws IOException, CsvException, InvalidStateException, ParseException {
-        List<List<String>> bookCopies = readCSVFile(filePath);
-        for (List<String> bookCopy : bookCopies) {
+        HashMap<String, List<String>> bookCopiesMap = readCsvFileViaMap(filePath);
+
+        List<String> ids = bookCopiesMap.get("id");
+        List<String> isbns = bookCopiesMap.get("bookIsbn");
+        List<String> shelfLocations = bookCopiesMap.get("shelfLocation");
+        List<String> addedToLibraryDates = bookCopiesMap.get("addedToLibrary");
+        List<String> lentStatuses = bookCopiesMap.get("lent");
+        List<String> lentDates = bookCopiesMap.get("lentDate");
+        List<String> customerIds = bookCopiesMap.get("customerId");
+
+        for (int i = 0; i < ids.size(); i++) {
+            int finalI = i;
             Book book = Database.INSTANCE.getBooks().stream()
-                    .filter(b -> b.getIsbn().equals(bookCopy.get(1)))
+                    .filter(b -> b.getIsbn().equals(isbns.get(finalI)))
                     .findFirst()
                     .orElseThrow(() -> new InvalidStateException("No book with given ISBN found"));
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            Date importDate = format.parse(bookCopy.get(3));
+            Date importDate = format.parse(addedToLibraryDates.get(i));
 
-            if (bookCopy.get(4).equals("yes")) {
-                Date lentDate = format.parse(bookCopy.get(5));
-                Database.INSTANCE.getBookCopies().add(new BookCopy(Long.parseLong(bookCopy.get(0)), book, importDate, true, lentDate));
-            } else
-                Database.INSTANCE.getBookCopies().add(new BookCopy(Long.parseLong(bookCopy.get(0)), book, importDate, false));
-
+            if (lentStatuses.get(i).equals("yes")) {
+                Date lentDate = format.parse(lentDates.get(i));
+                long customerId = Long.parseLong(customerIds.get(i));
+                BookCopy copy = new BookCopy(Long.parseLong(ids.get(i)), book, importDate, shelfLocations.get(i), true, lentDate);
+                Customer customer = Database.INSTANCE.getCustomers().stream()
+                        .filter(cust -> cust.getId() == customerId)
+                        .findFirst()
+                        .orElseThrow(() -> new InvalidStateException(String.format("No customer with given id found: [%s] \n BookCopy: [%s] cannot be imported", customerId, copy)));
+                customer.getBookCopies().add(copy);
+                Database.INSTANCE.getBookCopies().add(copy);
+            } else {
+                Database.INSTANCE.getBookCopies().add(new BookCopy(Long.parseLong(ids.get(i)), book, importDate, shelfLocations.get(i), false));
+            }
         }
         Database.INSTANCE.sortDB();
     }
@@ -63,16 +77,32 @@ public class CSVService {
      * @throws CsvException If there is an error parsing the CSV file.
      */
     public void importCustomersViaCSV(String filePath) throws IOException, CsvException {
-        List<List<String>> customers = readCSVFile(filePath);
-        boolean feesPayed = false;
-        for (List<String> customer : customers) {
-            if (customer.get(6).equals("yes"))
-                feesPayed = true;
-            if (customer.get(6).equals("no"))
-                feesPayed = false;
-            Database.INSTANCE.getCustomers().add(new Customer(Long.parseLong(customer.get(0)),
-                    new ArrayList<BookCopy>(), customer.get(1),
-                    customer.get(2), customer.get(3), customer.get(4), customer.get(5), feesPayed));
+        HashMap<String, List<String>> customersMap = readCsvFileViaMap(filePath);
+
+        List<String> ids = customersMap.get("id");
+        List<String> names = customersMap.get("name");
+        List<String> firstNames = customersMap.get("firstName");
+        List<String> zipCode = customersMap.get("zipCode");
+        List<String> city = customersMap.get("city");
+        List<String> feesStatus = customersMap.get("feesPayed");
+
+        for (int i = 0; i < ids.size(); i++) {
+            boolean feesPayed = "yes".equalsIgnoreCase(feesStatus.get(i));
+            try {
+                Database.INSTANCE.getCustomers().add(new Customer(
+                        Long.parseLong(ids.get(i)),
+                        new ArrayList<>(),
+                        names.get(i),
+                        firstNames.get(i),
+                        zipCode.get(i),
+                        city.get(i),
+                        feesStatus.get(i),
+                        feesPayed
+                ));
+            } catch (Exception e) {
+                System.err.println("Error processing customer data: " + names.get(i));
+                System.err.println("Error: " + e.getMessage());
+            }
         }
         Database.INSTANCE.sortDB();
     }
@@ -86,11 +116,26 @@ public class CSVService {
      * @throws CsvException If there is an error parsing the CSV file.
      */
     public void importBooksViaCSV(String filePath) throws IOException, CsvException {
-        List<List<String>> books = readCSVFile(filePath);
-        for (List<String> book : books) {
-            Database.INSTANCE.getBooks()
-                    .add(new Book(book.get(0), book.get(1), Arrays.stream(book.get(2).split("/")).toList(), //we assume Authors are split via /
-                            Integer.parseInt(book.get(3)), book.get(4), book.get(5), Integer.parseInt(book.get(6))));
+        HashMap<String, List<String>> booksMap = readCsvFileViaMap(filePath);
+        List<String> isbns = booksMap.get("isbn");
+        List<String> titles = booksMap.get("title");
+        List<String> authorsList = booksMap.get("authors");
+        List<String> publicationYears = booksMap.get("year");
+        List<String> city = booksMap.get("city");
+        List<String> publisher = booksMap.get("publisher");
+        List<String> edition = booksMap.get("edition");
+
+        for (int i = 0; i < isbns.size(); i++) {
+            List<String> authors = Arrays.stream(authorsList.get(i).split("/")).toList();
+            Database.INSTANCE.getBooks().add(new Book(
+                    isbns.get(i),
+                    titles.get(i),
+                    authors,
+                    Integer.parseInt(publicationYears.get(i)),
+                    city.get(i),
+                    publisher.get(i),
+                    Integer.parseInt(edition.get(i))
+            ));
         }
         Database.INSTANCE.sortDB();
     }
@@ -99,20 +144,29 @@ public class CSVService {
      * Reads data from a CSV file located at the provided filePath.
      *
      * @param filePath The path to the CSV file.
-     * @return A list of lists containing the parsed CSV data.
+     * @return A HashMap containing the parsed CSV data with headers as keys.
      * @throws IOException  If there is an error reading the CSV file.
      * @throws CsvException If there is an error parsing the CSV file.
      */
-    private List<List<String>> readCSVFile(String filePath) throws IOException, CsvException {
+    public HashMap<String, List<String>> readCsvFileViaMap(String filePath) throws IOException, CsvException {
         CSVReader reader = new CSVReader(new FileReader(filePath));
         List<String[]> data = reader.readAll();
-        List<List<String>> processedData = new ArrayList<>();
-        for (String[] line : data) {
-            if(line.length == 0)
-                continue;
-            processedData.add(Arrays.asList(line));
+        HashMap<String, List<String>> hashMap = new HashMap<>();
+
+        if (!data.isEmpty()) {
+            String[] headers = data.get(0);
+            for (String header : headers) {
+                hashMap.put(header, new ArrayList<>());
+            }
+            for (int i = 1; i < data.size(); i++) {
+                String[] line = data.get(i);
+                for (int j = 0; j < headers.length; j++) {
+                    String value = j < line.length ? line[j] : "";
+                    hashMap.get(headers[j]).add(value);
+                }
+            }
         }
         reader.close();
-        return processedData;
+        return hashMap;
     }
 }

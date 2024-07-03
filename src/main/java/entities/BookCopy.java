@@ -13,17 +13,19 @@ public class BookCopy {
 
 
 
-    public BookCopy(long id, Book book, Date addedToLibrary, boolean lent) {
+    public BookCopy(long id, Book book, Date addedToLibrary, String shelfLocation, boolean lent) {
         this.id = id;
         this.book = book;
         this.addedToLibrary = addedToLibrary;
+        this.shelfLocation = shelfLocation;
         this.lent = lent;
     }
 
-    public BookCopy(long id, Book book, Date addedToLibrary, boolean lent, Date lentDate) {
+    public BookCopy(long id, Book book, Date addedToLibrary, String shelfLocation, boolean lent, Date lentDate) {
         this.id = id;
         this.book = book;
         this.addedToLibrary = addedToLibrary;
+        this.shelfLocation = shelfLocation;
         this.lent = lent;
         this.lentDate = lentDate;
     }

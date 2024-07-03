@@ -40,12 +40,12 @@ class DataAccessServiceTest {
         Book book1 = new Book("1", "title1", Arrays.asList("Molitz", "Quentin"), 1900, "city1", "publisher1", 0);
         Book book2 = new Book("2", "title2", Arrays.asList("Emily", "Nora"), 1900, "city2", "publisher2", 0);
 
-        BookCopy bookCopy1 = new BookCopy(1, book1, new Date(), false);
-        BookCopy bookCopy2 = new BookCopy(2, book2, new Date(), false);
-        BookCopy bookCopy3 = new BookCopy(3, book1, new Date(), false);
-        BookCopy bookCopy4 = new BookCopy(4, book1, new Date(), false);
-        BookCopy bookCopy5 = new BookCopy(5, book2, new Date(), false);
-        BookCopy bookCopy6 = new BookCopy(6, book1, new Date(), false);
+        BookCopy bookCopy1 = new BookCopy(1, book1, new Date(),"BO01", false);
+        BookCopy bookCopy2 = new BookCopy(2, book2, new Date(), "BO01",false);
+        BookCopy bookCopy3 = new BookCopy(3, book1, new Date(), "BO01",false);
+        BookCopy bookCopy4 = new BookCopy(4, book1, new Date(), "BO01",false);
+        BookCopy bookCopy5 = new BookCopy(5, book2, new Date(), "BO01",false);
+        BookCopy bookCopy6 = new BookCopy(6, book1, new Date(), "BO01",false);
         copy1 = bookCopy1;
 
         Database.INSTANCE.getCustomers().addAll(Arrays.asList(customer1, customer2));
@@ -56,7 +56,7 @@ class DataAccessServiceTest {
 
     @Test
     public void searchBookCopyByTitleWasSuccessful() {
-        List<BookCopy> bookCopyList = dataAccessService.searchBookCopyByTitle("title1");
+        //List<BookCopy> bookCopyList = dataAccessService.searchBookCopyByTitle("title");
         assertEquals("title1", dataAccessService.searchBookCopyByTitle("title1").get(0).getBook().getTitle());
     }
 
@@ -68,7 +68,7 @@ class DataAccessServiceTest {
 
     @Test
     public void searchBookCopyByAuthorTest() {
-        List<BookCopy> list = dataAccessService.searchBookCopyByAuthor("Quentin");
+        List<BookCopy> list = dataAccessService.searchBookCopyByAuthor("Quenti");
 
         assertEquals(1, list.get(0).getId());
         assertEquals(3, list.get(1).getId());
