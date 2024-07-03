@@ -4,6 +4,11 @@ import database.Database;
 import entities.BookCopy;
 import exceptions.CustomerNotFoundException;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * This class provides reporting functionalities for the library system.
  * It offers methods to display information about books, customers,
@@ -60,7 +65,39 @@ public class ReportingService {
                 .findFirst()
                 .ifPresentOrElse(
                         customer -> System.out.println(customer.getBookCopies()),
-                        () -> { throw new RuntimeException(new CustomerNotFoundException("customerId does not exist")); }
+                        () -> {
+                            throw new RuntimeException(new CustomerNotFoundException("customerId does not exist"));
+                        }
                 );
     }
+
+    /**
+     * Prints the number and percentage of book copies per publisher in alphabetical order.
+     * Additionally, prints the count and percentage of book copies from publishers not included in the given list.
+     */
+    public void printBooksPerPublisher() {
+        List<String> publishers = new ArrayList<>();
+        Database.INSTANCE.getBooks().stream().forEach(book -> {
+            if (!publishers.contains(book.getPublisher())) {
+                publishers.add(book.getPublisher());
+            }
+        });
+        int numberOfCopies = Database.INSTANCE.getBookCopies().size();
+        Collections.sort(publishers);
+        if (numberOfCopies != 0) {
+            for (String publisher : publishers) {
+                int number = Database.INSTANCE.getBookCopies().stream()
+                        .filter(copy -> copy.getBook().getPublisher().equals(publisher)).toList().size();
+                double percentage = (double) number / numberOfCopies * 100;
+                System.out.printf(Locale.GERMANY,"%s: %d copies (%.1f%%)%n", publisher, number, percentage);
+            }
+            int other = Database.INSTANCE.getBookCopies().stream()
+                    .filter(copy -> !publishers.contains(copy.getBook().getPublisher())).toList().size();
+            if (other != 0) {
+                double percentage = (double) other / numberOfCopies * 100;
+                System.out.printf(Locale.GERMANY,"Other publishers: %d copies (%.1f%%)%n", other, percentage);
+            }
+        }
+    }
+
 }
