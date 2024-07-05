@@ -9,9 +9,9 @@ Alle Übungsblätter zusammen bestehen aus 150 Punkten, von denen 75 Punkte für
 | 01: Spezifikation       | 16 / 25                               |
 | 02: Testfall-Erstellung | 20 / 25                               |
 | 03: Implementierung     | 24 / 50                               |
-| 04: Wartung & Evolution | / 25                               |
+| 04: Wartung & Evolution | 25 / 25                               |
 | 05: Qualitätssicherung  | / 25                               |
-| **Summe**:              | 60 / 150                              |
+| **Summe**:              | 85 / 150                              |
 
 ## Feedback zur ÜB 01 (erreichte Punkte: 16)
 
@@ -57,3 +57,5 @@ fehlt [-5P]
 ### Aufgabe 5
 
 Nicht in CLI ausführbar [-20]
+
+## Feedback zur ÜB 04 (erreichte Punkte: 25)
